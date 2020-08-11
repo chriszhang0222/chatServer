@@ -13,6 +13,12 @@ Tornado, websocket, Vue.js, Redis, Django-Rest framework
 
 ```
 
+## Run command
+```
+python server.py wss (https)
+python server.py     (http)
+```
+
 ## example settings
 ### Chatserver setting.py
 ```

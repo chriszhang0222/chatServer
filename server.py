@@ -5,6 +5,7 @@ import json
 import logging
 import os
 import re
+import sys
 import urllib
 from typing import Union, Optional, Awaitable
 
@@ -287,6 +288,10 @@ def main(secure):
 
 if __name__ == "__main__":
     logging.info('Init Tornado Server')
-    main(False)
+    try:
+        secure = (sys.argv[1] == 'wss')
+    except IndexError:
+        secure = False
+    main(secure)
 
 
