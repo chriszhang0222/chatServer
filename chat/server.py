@@ -17,12 +17,12 @@ import urllib3
 from redis import Redis
 from tornado import gen
 
-import settings
+import chat.settings as settings
 from tornado.httpserver import HTTPServer
 from tornado.web import RequestHandler, Application
 from tornado.httpclient import HTTPClient, HTTPError, HTTPRequest, AsyncHTTPClient
 
-from utils import decode_token, convert_from_db_time
+from chat.utils import decode_token, convert_from_db_time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
