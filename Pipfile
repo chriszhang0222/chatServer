@@ -12,6 +12,8 @@ tornado = "*"
 redis = "*"
 websockets = "*"
 pymongo = "*"
+python-dateutil = "*"
+pytz = "*"
 
 [requires]
 python_version = "3.7"
