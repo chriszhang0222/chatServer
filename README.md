@@ -7,9 +7,10 @@ Tornado, websocket, Vue.js, Redis, Django-Rest framework
 
 ## Setup
 ```
-1. In Chatserver project, set all required settings in settings.py
+1. In Chatserver project, set all required settings in chat/settings.py
 2. In Quantum project .env file, set CHAT_SERVER_ADDRESS to be the address of Chatserver
 3. In both Quantum proj and Chatserver proj, the redis config should be same
+4. Remember to map port 8888 or 8889 to the same port on host machine
 
 ```
 
@@ -19,8 +20,8 @@ python server.py wss (https)
 python server.py     (http)
 ```
 
-## example settings
-### Chatserver setting.py
+## Example settings
+### Chatserver chat/setting.py
 ```
 REDIS_CONFIG = {
     'HOST': '192.168.0.107',
