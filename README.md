@@ -48,3 +48,11 @@ REDIS_PASSWORD=
 REDIS_PORT=6379
 CHAT_SERVER_ADDRESS=192.168.0.107
 ```
+
+### Docker run command(8888 port for example)
+```
+docker build -t t1 .
+&& docker run
+-p 127.0.0.1:8888:8888
+--name ChatServer
+```
