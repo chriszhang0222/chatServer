@@ -56,3 +56,42 @@ docker build -t t1 .
 -p 127.0.0.1:8888:8888
 --name ChatServer
 ```
+
+### Architecture and Authentication
+```
+ ----------
+|  Quantum |       Store Token, user info, company_info in redis(Encrypted)
+|  server  |----------------------   
+|          |                     |  
+|----------|                     |   
+ |        ^                      |
+ |Socket  |                      V 
+ |        |                   ---------
+ |        |                  |  Redis  |
+ |        | Rest API          ---------
+ |        |                       ^
+ V        |                       |
+|-------------|                   |
+| Chat Server |-------------------
+|_____________|       When websocket connected, read token from redis and decrypted 
+                      to check auth user
+
+0. Create auth token using python manage.py drf_create_token
+
+1. When User login the quantum server, use request session key, company id and user id
+as key, encrypted with base64. User info, auth token as value, store in redis.
+When use logout or key expires, redis delete key automatically.
+
+2. In chatServer set ALLOWED_HOSTS to filter invalid request sources.
+
+3. When user use the chat, Quantum server opens a websocket connection to the chat server,
+chatserver receieves the encrypted token after connection established. If no encrypted token receives, close connection. 
+Otherwise decryptes the token and search from redis. If exists,
+the user is authenticated, otherwise close the connection.
+
+4. When user sends message/file, chatserver distributes the message to other users in the same room, 
+then call the rest api to persist the message/file into quantum db
+
+Notice that we use Redis as message channel publish/subscribe middleware as well as Auth token storage,
+be sure in Qunatum settings and Chatserver settings the address of Redis should be same
+```
