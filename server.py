@@ -17,7 +17,7 @@ import urllib3
 from redis import Redis
 from tornado import gen
 
-import chat.settings as settings
+from chat.settings import *
 from tornado.httpserver import HTTPServer
 from tornado.web import RequestHandler, Application
 from tornado.httpclient import HTTPClient, HTTPError, HTTPRequest, AsyncHTTPClient
@@ -27,7 +27,7 @@ from chat.utils import decode_token, convert_from_db_time
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
-REDIS_SERVER = settings.REDIS_CONFIG
+REDIS_SERVER = REDIS_CONFIG
 LOGGER = logging.getLogger(__name__)
 logging.basicConfig(format='%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s',
                     level=logging.INFO)
@@ -61,7 +61,7 @@ class ChatSocketServerHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin: str) -> bool:
         domain = self.request.headers.get('Origin')
         domain = domain.replace('http://', '').replace('https://', '').rstrip('/')
-        if domain in settings.ALLOWED_HOSTS:
+        if domain in ALLOWED_HOSTS:
             return True
         return False
 
@@ -123,7 +123,7 @@ class ChatSocketServerHandler(tornado.websocket.WebSocketHandler):
         try:
             self.write_message({'type': 'chat', 'success': True, 'messages': [message]})
         except tornado.websocket.WebSocketClosedError:
-            logging.error('closed')
+            pass
 
     def get_converted_datetime(self, date, time_zone):
         date = convert_from_db_time(date, time_zone)
@@ -250,7 +250,7 @@ class ChatSocketServerHandler(tornado.websocket.WebSocketHandler):
         user_id = params['user_id']
         company_id = params['company_id']
         token = self.client.get('user_{}_company_{}'.format(user_id, company_id))
-        url = settings.QUANTUM_SERVER_URL + url
+        url = QUANTUM_SERVER_URL + url
         return HTTPRequest(url=url, method=method, headers={
             'Authorization': 'Token ' + token
         }, body=urllib.parse.urlencode(params))
@@ -279,7 +279,7 @@ def main(secure):
     app = Application()
     if secure:
         logging.info('Init Socket Server port: 8889')
-        app.listen(8889, ssl_options=settings.SSL_OPTIONS)
+        app.listen(8889, ssl_options=SSL_OPTIONS)
     else:
         logging.info('Init Socket Server port: 8888')
         app.listen(8888)
